@@ -28,6 +28,8 @@ for(int i=0;i<max;i++){
  void check(int a){
 if(arr[a] == 1){
     cout << "Computer is occupied";
+}else{
+    cout <<"Computer is free";
 }
  }
 
