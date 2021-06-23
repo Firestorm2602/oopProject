@@ -1,22 +1,22 @@
 #include <bits/stdc++.h>
 #define max 100
 using namespace std;
-int noOcomp=0;
-int comp[max];string namestore[max];int pinstore[max];int noOppl=0;
-int a =-1,i=0,k=0;
+int noOcomp=4;
+int comp[max];int noOppl=0;
+int earn=0; int sessions=0;
 bool ifOccupied1[max];
-string tempname[max]; 
-
-bool ifOccupied();
+string adminName[4] = {"Rohit","Siddhant","Arushi","Mukul"};
+string adminPin[4] = {"1234","1234","1234","1234"};
 void admin1();
 void menu();
  bool check();
  void registration();
+ void payCheck();
 class admin{
  public :
   void insertComp(){
-     a++;noOcomp++;i++;
-     comp[a] = i;
+     comp[noOcomp] = noOcomp+1;
+     noOcomp++;
  }
  void deleteComp(int pos){
    if(pos <= noOcomp){
@@ -40,25 +40,14 @@ class admin{
 
 class login{
     public:
-    string name;
-    int pin,l=1;
+    string name,pin,p;
  void details(){
+     sessions++;
 cout<<"Enter your name\n";
 cin >> name;
 cout <<"Enter your pin\n";
 cin >>pin;
-for(int i=0;i<=k;i++){
-    if(name==tempname[i]){
-        cout<<"user already logged in";
-        l=0;
-        menu();
-        break;}
-}
-if(l=1){
-if(noOcomp>0){
 if(check()){
-  k++;
- tempname[k-1]=name;
     int i;int m=0;
     for( i=0;i<noOcomp;i++){
         if(ifOccupied1[i]==false){
@@ -68,86 +57,114 @@ if(check()){
         }
     }
 if(m==0){
-    cout<<"No computer is free at the moment";
+    cout<<"No computer is free at the moment\n";
 }
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 cout << "Welcome\nYou have been assigned computer no "<< i+1<<"\n" ;
+logout:
 cout<<"1.logout\n";
-cout<<"2.Menu\n";
+
 int a;
 cin >> a;
 if(a==1){
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    cout << "Time difference = " << std::chrono::duration_cast<std::chrono::seconds> (end - begin).count() << "[sec]" << std::endl;
-    for(int i=k-1;i<=k;i++){
-       tempname[i] = tempname[i+1];
-     }
-     k--;
-    ifOccupied1[i] =false;
-}else if(a==2){menu();}
+    cout << "Time difference = " << std::chrono::duration_cast<std::chrono::seconds> (end - begin).count() << "sec" << std::endl;
+    float cost=0;
+    float a;
+   a = std::chrono::duration_cast<std::chrono::seconds> (end - begin).count() ;
+    if(a<60)
+    cost=1*30;
+    else if(a>60&&a<120)
+    cost=2*30;
+    else if(a>120&&a<180)
+    cost=3*30;
+    else if(a>180&&a<240)
+    cost=4*30;
+    else if(a>240&&a<300)
+    cost=5*30;
+    else if(a>300&&a<360)
+    cost=6*30;
+    else if(a>360&&a<420)
+    cost=7*30;
+    else if(a>420&&a<480)
+    cost=8*30;
+    else if(a>480&&a<540)
+    cost=9*30;
+    cout<<"Charge for the session is Rs."<<cost;  
+    earn = cost + earn;
+     ifOccupied1[i] =false;
+}else{
+    cout<<"please enter a valid key\n";
+    goto logout;
 }
-    else{
+
+} else{
     cout<<"No user registered \n";
     menu();
 }
-}else{
-    cout<<"Please add computer first";
-    menu();
 
-}
- }
+ 
  }
   bool check(){
-     for(int i=0;i<noOppl;i++){
-         if(namestore[i] == name && pinstore[i] == pin){
-           return true;
-     }
+    ifstream read(name+".txt");
+     getline(read,p);
+    if( p == pin){
+        return true;
+    }else{
+        cout<<"Register first\n";
+        return false;
     }
-   return false;
   }
 };
 
 
 int main(){
-     for(int i=0;i<max;i++){
-     ifOccupied1[i] = false;
+     for(int i=0;i<4;i++){
+  comp[i] = i+1;
  }
 menu();
 
     return 0;
 }
-bool ifOccupied(){
-   
+void payCheck(){
+    cout<<"Welcome to our cost display option"<<endl;
+    cout<<"The cost for surfing internet per hour is as follows"<<endl;
+    cout<<"User will have to pay the amount for an hour even if he uses less than that"<<endl;
+    for(int i=1;i<10;i++)
+    {
+        cout<< "For " <<i<< " hour it is Rs."<<i*30<<endl;
+    }
+    cout << "Press 1 to exit to menu.\n";
+    int a;
+    cin>>a;
+    if(a==1){
+        menu();
+        }
 }
 void registration(){
-    string n; int p,q=1;
+    int q=1;
+    ofstream fout;
+    string n, p;
     cout << "enter your name\n";
     cin >> n;
     cout << "Enter your pin\n";
     cin >>p;
-    for(int i=0;i<noOppl;i++){
-       if(n== namestore[i]){
-        q=0;
-           break;
-       }
-    }
-    if(q==1){
+  
+   
+        fout.open(n+".txt");
+        fout<<p;
+        fout.close();
     cout << "you are registered\n";
     noOppl++;
-        namestore[noOppl-1] = n;
-        pinstore[noOppl-1] = p;
- menu();}else{
-     cout<<"Name already taken please use a diffrent name";
-     registration();
- }
+ menu();
  
 }
-
  
 void admin1(){
     int i;
     while(i!=5){
-    cout<<endl<<"1.Add computer\n2.Delete computer\n3.Check occupied computer timer\n4.Check number of computer\n5.Menu\n";
+        
+    cout<<endl<<"1.Add computer\n2.Delete computer\n3.Check number of computer\n4.Check daily earning\n5.Menu\n";
     scanf("%d",&i);
     admin a;
 switch (i)
@@ -160,8 +177,10 @@ switch (i)
     int p;
     cin >>p;
     a.deleteComp(p);
-    case 4:
+    case 3:
     a.noOComp();
+    case 4:
+    cout << "Today's earning : Rs "<<earn<<" \nFrom "<<sessions<<" session ";
     case 5:
     menu();
     break;
@@ -172,23 +191,34 @@ switch (i)
 }
 void menu(){
     int i;
-    login b;
+    login b;string adminN;string adminP;int h=0;
 while(i!=4){
-    cout<<endl<<"1.ADMIN\n2.Login user\n3.Register user\n4.exit\n";
+    cout<<endl<<"1.ADMIN\n2.Login user\n3.Register user\n4.Price Display\n5.exit\n";
      scanf("%d",&i);
     switch (i)
     {
     case 1:
-     admin1();
-        break;
+cout<<"Admin Login\n";
+cout<<"Enter admin name\n";
+cin>>adminN;cout<<"Enter Pin\n";cin>>adminP;
+for(int i=0;i<4;i++){
+    if(adminN==adminName[i] && adminP==adminPin[i]){cout<<"Welcome\n";admin1();
+    }else{h=1;}
+}
+if(h==1){cout<<"Wrong input";
+menu();
+}       break;
         case 2:
          b.details();
         break;
         case 3:
       registration();
         break;
-     case 4:
-     exit(4);
+        case 4:
+        payCheck();
+        break;
+     case 5:
+     exit(5);
      break;
    
     }
