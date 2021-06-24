@@ -95,29 +95,22 @@ class login {
             if(a==1) {
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
                 cout<<endl;
-                cout << "\t Time difference = " << std::chrono::duration_cast<std::chrono::seconds> (end - begin).count() << "sec" << std::endl;
-                float cost=0;
-                float a;
-                a = std::chrono::duration_cast<std::chrono::seconds> (end - begin).count() ;
+                int sec=0,min=0,hr=0;
+                sec = std::chrono::duration_cast<std::chrono::seconds> (end - begin).count() ;
                 
-                if(a<60)
-                    cost=1*30;
-                else if(a>60&&a<120)
-                    cost=2*30;
-                else if(a>120&&a<180)
-                    cost=3*30;
-                else if(a>180&&a<240)
-                    cost=4*30;
-                else if(a>240&&a<300)
-                    cost=5*30;
-                else if(a>300&&a<360)
-                    cost=6*30;
-                else if(a>360&&a<420)
-                    cost=7*30;
-                else if(a>420&&a<480)
-                    cost=8*30;
-                else if(a>480&&a<540)
-                    cost=9*30;
+                if(sec>=60) {
+                    min=sec/60;
+                    sec=sec%60;
+                    if(min>=60) {
+                        hr=min/60;
+                        min=min%60;
+                    }
+                }
+
+                cout << "\t Time difference = " <<hr<<" hours "<<min<<" minutes "<<sec<<" seconds "<<endl;
+                
+                int cost=0;
+                cost=hr*30 +30;
                 
                 cout<<"\t Charge for the session is Rs. "<<cost;
                 cout<<endl;
@@ -204,6 +197,10 @@ void registration() {
     
     cout << "\t You are registered."<<endl;
     noOppl++;
+    
+    fout.open("memberlist.txt",ios::app);
+    fout<<"\t"<<n<<endl;
+    fout.close();
     menu();
 }
 
@@ -219,7 +216,7 @@ void admin1() {
         cout<<endl<<endl;
         cout<<"\t 1. Add computer"<<endl;
         cout<<"\t 2. Delete computer"<<endl;
-        cout<<"\t 3. Check occupied computer timers"<<endl;
+        cout<<"\t 3. List all registered users"<<endl;
         cout<<"\t 4. Check number of computers"<<endl;
         cout<<"\t 5. Check daily earning"<<endl;
         cout<<"\t 6. Menu"<<endl<<endl;
@@ -238,6 +235,12 @@ void admin1() {
                 int p;
                 cin >>p;
                 a.deleteComp(p);
+            case 3:
+                cout<<"\t Registered users are:"<<endl;
+                std::cout<<std::ifstream("memberlist.txt").rdbuf(); 
+                cout<<"\n";
+                admin1();
+                break;
             case 4:
                 a.noOComp();
             case 5:
