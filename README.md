@@ -1,2 +1,2 @@
 # oopProject
-hello
+Simple Library management system
